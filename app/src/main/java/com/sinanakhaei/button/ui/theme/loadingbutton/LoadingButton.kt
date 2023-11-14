@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 fun LoadingButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    state: LoadingButtonState = rememberLoadingButtonState(initial = LoadingButtonStatus.Default),
+    state: LoadingButtonState = rememberLoadingButtonState(initialState = LoadingButtonStatus.Default),
     colors: LoadingButtonColors = LoadingButtonDefaults.colors(),
     sizes: LoadingButtonSizes = LoadingButtonDefaults.sizes(),
     elevation: LoadingButtonElevation = LoadingButtonDefaults.elevation(),
@@ -37,9 +37,8 @@ fun LoadingButton(
 ) {
     var widthTargetValue by remember { mutableStateOf(sizes.width) }
     val width by animateDpAsState(targetValue = widthTargetValue, label = "")
-    var isLoading by remember { mutableStateOf(state.isLoading) }
 
-    LaunchedEffect(isLoading) {
+    LaunchedEffect(state.isLoading) {
         widthTargetValue = if (state.isLoading) sizes.height
         else sizes.width
     }
@@ -52,10 +51,7 @@ fun LoadingButton(
             modifier = Modifier
                 .width(width)
                 .height(sizes.height),
-            onClick = {
-                onClick()
-                isLoading = state.isLoading
-            },
+            onClick = onClick,
             colors = colors.toButtonColors(state.isLoading),
             elevation = elevation.toButtonElevation(),
             enabled = enabled && !state.isLoading,
