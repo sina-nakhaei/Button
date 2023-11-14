@@ -1,5 +1,7 @@
 package com.sinanakhaei.button.ui.theme.loadingbutton
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun LoadingButton(
     onClick: () -> Unit,
@@ -58,14 +61,16 @@ fun LoadingButton(
             shape = RoundedCornerShape(sizes.height * .5f),
             contentPadding = PaddingValues(0.dp)
         ) {
-            if (state.isLoading) {
-                CircularProgress(
-                    sizes.height,
-                    sizes.progressWidth,
-                    colors.progressColor
-                )
-            } else {
-                content()
+            AnimatedContent(targetState = state.isLoading, label = "") {
+                if (it) {
+                    CircularProgress(
+                        sizes.height,
+                        sizes.progressWidth,
+                        colors.progressColor
+                    )
+                } else {
+                    content()
+                }
             }
         }
     }
